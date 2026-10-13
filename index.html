@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>アイプリ配列ナビ</title>
+<style>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #fff7fc;
+  color: #493746;
+}
+header {
+  background: #f1d8ed;
+  padding: 24px 12px;
+  text-align: center;
+}
+h1 { color: #874779; margin: 0; }
+main { padding: 16px; max-width: 600px; margin: auto; }
+input, select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 6px 0 14px;
+  border: 1px solid #dfc6da;
+  border-radius: 10px;
+  background: white;
+  font-size: 16px;
+}
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+  box-shadow: 0 2px 8px #eadce8;
+}
+.num {
+  padding: 12px;
+  border-radius: 8px;
+  background: #f5e4f2;
+  font-weight: bold;
+}
+.small { color: #786879; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>アイプリ配列ナビ 🎀</h1>
+  <p>みんなで見られる配列データベース</p>
+</header>
+<main>
+  <h2>配列表を検索</h2>
+  <label for="keyword">カード名・キャラクター名</label>
+  <input id="keyword" placeholder="名前を入力して検索">
+
+  <label for="rarity">レアリティ</label>
+  <select id="rarity">
+    <option value="">すべて</option>
+    <option>☆4</option>
+    <option>☆3</option>
+    <option>☆2</option>
+  </select>
+
+  <p id="count"></p>
+  <div id="results"></div>
+  <p class="small">
+    ※現在は表示テスト用の仮データです。
+    実際の排出順ではありません。
+  </p>
+</main>
+<script>
+const cards = [
+  {order:1,name:"サンプルカードA",character:"あおい",rarity:"☆3"},
+  {order:2,name:"サンプルカードB",character:"ぐみ",rarity:"☆2"},
+  {order:3,name:"サンプルカードC",character:"おりびあ",rarity:"☆4"},
+  {order:4,name:"サンプルカードD",character:"ぐみ",rarity:"☆3"}
+];
+
+function render() {
+  const keyword = document.getElementById("keyword")
+    .value.trim().toLowerCase();
+  const rarity = document.getElementById("rarity").value;
+
+  const filtered = cards.filter(card =>
+    (card.name + card.character).toLowerCase().includes(keyword) &&
+    (!rarity || card.rarity === rarity)
+  );
+
+  document.getElementById("count").textContent =
+    filtered.length + "件のカード";
+
+  document.getElementById("results").innerHTML =
+    filtered.map(card => `
+      <div class="card">
+        <div class="num">${String(card.order).padStart(2,"0")}</div>
+        <div>
+          <strong>${card.name}</strong>
+          <div>${card.character}</div>
+          <div class="small">${card.rarity} ・ 排出順 ${card.order}</div>
+        </div>
+      </div>
+    `).join("") || "<p>該当するカードがありません。</p>";
+}
+document.getElementById("keyword").addEventListener("input",render);
+document.getElementById("rarity").addEventListener("change",render);
+render();
+</script>
+</body>
+</html>
